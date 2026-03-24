@@ -22,7 +22,7 @@ impl Plugin for TowerOfDoomPlugin {
             combat::CombatPlugin,
             economy::EconomyPlugin,
             ui::UiPlugin,
-            debug::DebugPlugin,
+            // debug::DebugPlugin, // Disabled — enable with backtick when needed
         ));
     }
 }
