@@ -137,6 +137,26 @@ fn rarity_color(rarity: &Rarity) -> Color {
     }
 }
 
+/// Darkened rarity color for slot backgrounds.
+fn rarity_bg_color(rarity: &Rarity) -> Color {
+    match rarity {
+        Rarity::Common => Color::srgb(0.18, 0.18, 0.18),
+        Rarity::Uncommon => Color::srgb(0.08, 0.20, 0.08),
+        Rarity::Rare => Color::srgb(0.08, 0.12, 0.28),
+        Rarity::Epic => Color::srgb(0.18, 0.08, 0.22),
+    }
+}
+
+fn rarity_color_str(rarity: &str) -> Color {
+    match rarity {
+        "Common" => Color::srgb(0.6, 0.6, 0.6),
+        "Uncommon" => Color::srgb(0.2, 0.8, 0.2),
+        "Rare" => Color::srgb(0.3, 0.5, 1.0),
+        "Epic" => Color::srgb(0.7, 0.3, 0.9),
+        _ => Color::WHITE,
+    }
+}
+
 // === HUD Setup ===
 
 fn setup_hud(mut commands: Commands) {
@@ -594,11 +614,12 @@ fn update_shop_display(
             Some(shop_item) => {
                 let price = shop_item.price();
                 let affordable = gold.current >= price;
-                **text = format!("{}\n{}g", shop_item.name, price);
-                *text_color = if affordable {
-                    TextColor(rarity_color(&shop_item.rarity))
+                if affordable {
+                    **text = format!("{}\n{}g", shop_item.name, price);
+                    *text_color = TextColor(rarity_color(&shop_item.rarity));
                 } else {
-                    TextColor(Color::srgb(0.4, 0.4, 0.4))
+                    **text = format!("{}\n{}g", shop_item.name, price);
+                    *text_color = TextColor(Color::srgb(0.4, 0.4, 0.4));
                 };
             }
             None => {
@@ -608,7 +629,7 @@ fn update_shop_display(
         }
     }
 
-    // Update slot backgrounds
+    // Update slot backgrounds — tinted by rarity
     for (mut bg, slot_btn) in &mut slot_bg_query {
         let item = if slot_btn.row == 0 {
             &shop.weapon_slots[slot_btn.col]
@@ -620,13 +641,13 @@ fn update_shop_display(
             Some(shop_item) => {
                 let affordable = gold.current >= shop_item.price();
                 *bg = if affordable {
-                    BackgroundColor(Color::srgb(0.2, 0.2, 0.3))
+                    BackgroundColor(rarity_bg_color(&shop_item.rarity))
                 } else {
-                    BackgroundColor(Color::srgb(0.15, 0.15, 0.15))
+                    BackgroundColor(Color::srgb(0.12, 0.12, 0.12))
                 };
             }
             None => {
-                *bg = BackgroundColor(Color::srgb(0.1, 0.1, 0.1));
+                *bg = BackgroundColor(Color::srgb(0.08, 0.08, 0.08));
             }
         }
     }
@@ -679,10 +700,10 @@ fn update_tooltip(
     weapons: Res<WeaponDatabase>,
     upgrades: Res<UpgradeDatabase>,
     mut tooltip_vis: Query<&mut Visibility, With<TooltipPanel>>,
-    mut tooltip_text: Query<&mut Text, With<TooltipText>>,
+    mut tooltip_text: Query<(&mut Text, &mut TextColor), With<TooltipText>>,
 ) {
     let Ok(mut vis) = tooltip_vis.single_mut() else { return };
-    let Ok(mut text) = tooltip_text.single_mut() else { return };
+    let Ok((mut text, mut text_color)) = tooltip_text.single_mut() else { return };
 
     // Find hovered slot
     let mut hovered_item = None;
@@ -706,6 +727,7 @@ fn update_tooltip(
     };
 
     *vis = Visibility::Visible;
+    *text_color = TextColor(rarity_color(&item.rarity));
 
     if row == 0 {
         // Weapon tooltip
@@ -715,7 +737,6 @@ fn update_tooltip(
             format!("{} | {}", def.weapon_type, def.attack_type),
             format!("{}dmg  {:.1}s cd  {} DPS  Range {}", def.damage, def.attack_cooldown, def.dps, def.range),
         ];
-        // Extract modifiers from ability
         let mods = extract_modifiers(&def.ability);
         if !mods.is_empty() {
             lines.push(mods);
@@ -723,13 +744,14 @@ fn update_tooltip(
         if !def.ability.is_empty() {
             lines.push(def.ability.clone());
         }
+        lines.push(format!("Cost: {}g", item.price()));
         **text = lines.join("\n");
     } else {
         // Upgrade tooltip
         let def = &upgrades.upgrades[item.definition_index];
         **text = format!(
-            "{} [{}]\nType: {}\n{}",
-            def.name, def.rarity, def.upgrade_type, def.description
+            "{} [{}]\nType: {}\n{}\nCost: {}g",
+            def.name, def.rarity, def.upgrade_type, def.description, item.price()
         );
     }
 }
