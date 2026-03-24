@@ -241,27 +241,34 @@ fn setup_hud(mut commands: Commands) {
 // === Shop Setup ===
 
 fn setup_shop(mut commands: Commands) {
-    // Tooltip panel — above the shop, hidden by default
+    // Tooltip panel — above the shop, centered
     commands.spawn((
         TooltipPanel,
         Node {
             position_type: PositionType::Absolute,
             bottom: Val::Px(230.0),
-            left: Val::Percent(50.0),
-            padding: UiRect::all(Val::Px(10.0)),
+            width: Val::Percent(100.0),
+            justify_content: JustifyContent::Center,
+            align_items: AlignItems::Center,
             ..default()
         },
-        BackgroundColor(Color::srgba(0.08, 0.08, 0.14, 0.95)),
         Visibility::Hidden,
         GlobalZIndex(40),
     )).with_children(|parent| {
         parent.spawn((
-            TooltipText,
-            Text::new(""),
-            TextFont { font_size: 13.0, ..default() },
-            TextColor(Color::srgb(0.85, 0.85, 0.9)),
-            Node { left: Val::Px(-220.0), ..default() },
-        ));
+            Node {
+                padding: UiRect::all(Val::Px(10.0)),
+                ..default()
+            },
+            BackgroundColor(Color::srgba(0.08, 0.08, 0.14, 0.95)),
+        )).with_children(|bg| {
+            bg.spawn((
+                TooltipText,
+                Text::new(""),
+                TextFont { font_size: 13.0, ..default() },
+                TextColor(Color::srgb(0.85, 0.85, 0.9)),
+            ));
+        });
     });
 
     // Outer container — anchored to bottom center
@@ -751,7 +758,13 @@ fn handle_shop_clicks(
     mut purchased_upgrades: ResMut<PurchasedUpgrades>,
     mut weapon_events: MessageWriter<WeaponPurchasedEvent>,
     mut upgrade_events: MessageWriter<UpgradePurchasedEvent>,
+    timer: Res<RunTimer>,
 ) {
+    // Lock shop at 15 minutes (boss phase)
+    if timer.elapsed >= crate::components::run::RUN_DURATION {
+        return;
+    }
+
     for (interaction, slot) in &interaction_query {
         if *interaction != Interaction::Pressed {
             continue;
@@ -811,7 +824,10 @@ fn handle_reroll_click(
     state: Res<State<GameState>>,
     weapons: Res<WeaponDatabase>,
     upgrades: Res<UpgradeDatabase>,
+    timer: Res<RunTimer>,
 ) {
+    if timer.elapsed >= crate::components::run::RUN_DURATION { return; }
+
     for interaction in &interaction_query {
         if *interaction != Interaction::Pressed {
             continue;

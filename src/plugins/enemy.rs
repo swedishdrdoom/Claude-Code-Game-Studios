@@ -72,29 +72,67 @@ fn lerp_curve(keyframes: &[(f32, f32)], t: f32) -> f32 {
     keyframes[last].1
 }
 
-// HP multiplier curve (base 300 HP)
-// Early: punishing (1x→5x in 3 min) — punishes pure gold builds
-// Mid: easing (5x→10x over min 3-6) — breathing room
-// Late: steep ramp to 40x at 10 min (12,000 HP)
-// Spike: 10-15 min accelerating toward 400x
-const HP_CURVE: [(f32, f32); 16] = [
-    (0.0,   1.0),    // 300 HP
-    (60.0,  2.0),    // 600 HP — minute 1, early pressure
-    (120.0, 3.5),    // 1,050 HP
-    (180.0, 5.0),    // 1,500 HP — minute 3
-    (240.0, 6.5),    // 1,950 HP — easing
-    (300.0, 8.0),    // 2,400 HP — minute 5
-    (360.0, 10.0),   // 3,000 HP — minute 6
-    (420.0, 15.0),   // 4,500 HP — ramping
-    (480.0, 22.0),   // 6,600 HP
-    (540.0, 30.0),   // 9,000 HP
-    (600.0, 40.0),   // 12,000 HP — minute 10 target
-    (660.0, 65.0),   // 19,500 HP — spike phase
-    (720.0, 100.0),  // 30,000 HP
-    (780.0, 160.0),  // 48,000 HP
-    (840.0, 250.0),  // 75,000 HP
-    (900.0, 400.0),  // 120,000 HP — minute 15
+// Base (strong) enemy HP curve — piecewise keyframes.
+// Accelerates early (punishes gold-rushing), decelerates mid, re-accelerates for spike.
+// Weak armor type gets 50% of this value.
+const BASE_HP_CURVE: [(f32, f32); 31] = [
+    (0.0,   600.0),    // 0:00
+    (30.0,  660.0),    // 0:30
+    (60.0,  755.0),    // 1:00
+    (90.0,  888.0),    // 1:30
+    (120.0, 1065.0),   // 2:00
+    (150.0, 1290.0),   // 2:30
+    (180.0, 1568.0),   // 3:00 — peak growth rate
+    (210.0, 1902.0),   // 3:30
+    (240.0, 2298.0),   // 4:00
+    (270.0, 2760.0),   // 4:30
+    (300.0, 3293.0),   // 5:00 — decelerating
+    (330.0, 3900.0),   // 5:30
+    (360.0, 4587.0),   // 6:00
+    (390.0, 5358.0),   // 6:30
+    (420.0, 6218.0),   // 7:00
+    (450.0, 7170.0),   // 7:30
+    (480.0, 8220.0),   // 8:00
+    (510.0, 9372.0),   // 8:30
+    (540.0, 10631.0),  // 9:00
+    (570.0, 11981.0),  // 9:30
+    (600.0, 13419.0),  // 10:00 — trough, spike begins
+    (630.0, 15029.0),  // 10:30
+    (660.0, 17208.0),  // 11:00
+    (690.0, 20047.0),  // 11:30
+    (720.0, 23756.0),  // 12:00
+    (750.0, 28626.0),  // 12:30
+    (780.0, 35067.0),  // 13:00
+    (810.0, 43658.0),  // 13:30
+    (840.0, 55227.0),  // 14:00
+    (870.0, 70967.0),  // 14:30
+    (900.0, 92612.0),  // 15:00
 ];
+
+// Weak armor type rotation: Light → Medium → Heavy → Fortified, 30s each, 2 min cycle.
+const WEAK_ROTATION: [ArmorType; 4] = [
+    ArmorType::Light,
+    ArmorType::Medium,
+    ArmorType::Heavy,
+    ArmorType::Fortified,
+];
+
+/// Returns which armor type is currently "weak" (50% HP).
+fn current_weak_type(elapsed: f32) -> ArmorType {
+    let phase = ((elapsed / 30.0).floor() as usize) % 4;
+    WEAK_ROTATION[phase]
+}
+
+/// Compute enemy HP based on armor type and elapsed time.
+/// The current weak type gets 50% HP; all others get full base HP.
+fn compute_enemy_hp(armor_type: ArmorType, elapsed: f32) -> f32 {
+    let base = lerp_curve(&BASE_HP_CURVE, elapsed);
+    if armor_type == current_weak_type(elapsed) {
+        base * 0.5
+    } else {
+        base
+    }
+}
 
 // Damage multiplier curve
 // Must force armor/defense investment — undefended tower melts when surrounded
@@ -132,10 +170,25 @@ fn update_wave_escalation(
     timer: Res<crate::components::run::RunTimer>,
 ) {
     let t = timer.elapsed;
-    wave.hp_multiplier = lerp_curve(&HP_CURVE, t);
+    wave.hp_multiplier = 1.0; // HP now computed per-enemy via compute_enemy_hp
     wave.damage_multiplier = lerp_curve(&DMG_CURVE, t);
     wave.base_spawn_rate = lerp_curve(&SPAWN_CURVE, t);
 }
+
+/// 8 cardinal/ordinal directions for spawn lanes.
+const SPAWN_DIRECTIONS: [f32; 8] = [
+    0.0,                        // East
+    TAU * 1.0 / 8.0,           // North-East
+    TAU * 2.0 / 8.0,           // North
+    TAU * 3.0 / 8.0,           // North-West
+    TAU * 4.0 / 8.0,           // West
+    TAU * 5.0 / 8.0,           // South-West
+    TAU * 6.0 / 8.0,           // South
+    TAU * 7.0 / 8.0,           // South-East
+];
+
+/// All enemies travel at the same speed: spawn_ring / 10 seconds.
+const ENEMY_TRAVEL_TIME: f32 = 10.0;
 
 fn spawn_enemies(
     mut commands: Commands,
@@ -144,19 +197,23 @@ fn spawn_enemies(
     arena: Res<ArenaConfig>,
     timer: Res<crate::components::run::RunTimer>,
 ) {
-    wave.spawn_accumulator += wave.base_spawn_rate * time.delta_secs();
+    // Tick once per second — spawn a batch
+    wave.spawn_accumulator += time.delta_secs();
+    if wave.spawn_accumulator < 1.0 { return; }
+    wave.spawn_accumulator -= 1.0;
 
     let mut rng = rand::rng();
+    let enemies_this_batch = wave.base_spawn_rate.round().max(1.0) as u32;
+    let travel_speed = (arena.spawn_ring_radius - 30.0) / ENEMY_TRAVEL_TIME;
 
-    while wave.spawn_accumulator >= 1.0 {
-        wave.spawn_accumulator -= 1.0;
-
-        // Random angle on spawn ring
-        let angle = rng.random_range(0.0..TAU);
+    for _ in 0..enemies_this_batch {
+        // Pick a random direction from the 8 lanes, with small angular offset
+        let lane = SPAWN_DIRECTIONS[rng.random_range(0..8)];
+        let jitter = rng.random_range(-0.15..0.15); // ~±8 degrees spread
+        let angle = lane + jitter;
         let x = angle.cos() * arena.spawn_ring_radius;
         let y = angle.sin() * arena.spawn_ring_radius;
 
-        // Random armor type (equal weight for now)
         let armor_type = match rng.random_range(0..5) {
             0 => ArmorType::Light,
             1 => ArmorType::Medium,
@@ -165,22 +222,9 @@ fn spawn_enemies(
             _ => ArmorType::Unarmored,
         };
 
-        let base_hp = match armor_type {
-            ArmorType::Light => 300.0,
-            ArmorType::Medium => 300.0,
-            ArmorType::Heavy => 300.0,
-            ArmorType::Fortified => 300.0,
-            ArmorType::Unarmored => 300.0,
+        let hp = match armor_type {
             ArmorType::Hero => 10000.0,
-        };
-
-        let base_speed = match armor_type {
-            ArmorType::Light => 150.0,
-            ArmorType::Medium => 100.0,
-            ArmorType::Heavy => 60.0,
-            ArmorType::Fortified => 50.0,
-            ArmorType::Unarmored => 120.0,
-            ArmorType::Hero => 80.0,
+            _ => compute_enemy_hp(armor_type, timer.elapsed),
         };
 
         let base_damage = match armor_type {
@@ -201,7 +245,6 @@ fn spawn_enemies(
             ArmorType::Hero => Color::srgb(0.9, 0.1, 0.9),
         };
 
-        let hp = base_hp * wave.hp_multiplier;
         let damage = base_damage * wave.damage_multiplier;
 
         let enemy_size = match armor_type {
@@ -219,7 +262,7 @@ fn spawn_enemies(
             EnemyHealth { current: hp, max: hp },
             EnemyArmor::default(),
             MoveSpeed {
-                base: base_speed,
+                base: travel_speed,
                 multiplier: 1.0,
             },
             GoldBounty::default(),

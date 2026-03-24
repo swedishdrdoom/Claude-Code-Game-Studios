@@ -17,8 +17,8 @@ pub struct ArenaConfig {
 impl Default for ArenaConfig {
     fn default() -> Self {
         Self {
-            radius: 1800.0,
-            spawn_ring_radius: 2200.0,
+            radius: 1300.0,
+            spawn_ring_radius: 1300.0,
         }
     }
 }
@@ -58,7 +58,7 @@ fn zoom_camera(
 ) {
     let Ok(mut projection) = camera_query.single_mut() else { return };
     if let Projection::Orthographic(ref mut ortho) = *projection {
-        ortho.scale = 2.5;
+        ortho.scale = 1.5;
     }
 }
 
