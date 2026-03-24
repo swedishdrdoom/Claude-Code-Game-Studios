@@ -1,0 +1,660 @@
+[
+  {
+    "Name": "Rapidfire",
+    "Rarity": "Uncommon",
+    "Type": "Attack Boost",
+    "Description": "+10% Attack Speed",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755348313/BTNFlakCannons_d3m7am.png"
+  },
+  {
+    "Name": "Improved Piercing Attacks",
+    "Rarity": "Common",
+    "Type": "Damage Boost",
+    "Description": "+10% Piercing Damage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755357463/Piercing_Arrow_sczhon.png"
+  },
+  {
+    "Name": "Magic Coin",
+    "Rarity": "Common",
+    "Type": "Income",
+    "Description": "+5 Gold per second",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755349909/BTNMGExchange_fbe3wy.png"
+  },
+  {
+    "Name": "Critical Decimation",
+    "Rarity": "Rare",
+    "Type": "Critical",
+    "Description": "+10% Critical Strike Chance. +10% Critical Strike Power",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755350197/BTNCleavingAttack_ysd6pk.png"
+  },
+  {
+    "Name": "Spiked barricades",
+    "Rarity": "Common",
+    "Type": "Spikes",
+    "Description": "+20 Spikes Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755351236/BTNSpikedBarricades_k1m5sh.png"
+  },
+  {
+    "Name": "Searing Heat",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+10% Fire damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755351593/BTNWallOfFire_dk7ghy.png"
+  },
+  {
+    "Name": "Spiked Masonry",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. Gain 1 Max HP when attacked.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755357510/Spiked_Masonry_jknikb.png"
+  },
+  {
+    "Name": "Mana Shield",
+    "Rarity": "Common",
+    "Type": "Mana Shield",
+    "Description": "+1000 Mana Shield",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755357640/BTNNeutralManaShield_inuxte.png"
+  },
+  {
+    "Name": "Improved Masonry",
+    "Rarity": "Common",
+    "Type": "HP",
+    "Description": "+500 Max HP",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755357857/Improved_Masonry_lk1ykx.png"
+  },
+  {
+    "Name": "Repair Crew",
+    "Rarity": "Common",
+    "Type": "Regen",
+    "Description": "+20 Health Regen",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755357992/Repair_Crew_dwrvui.png"
+  },
+  {
+    "Name": "Philosopher's Stone",
+    "Rarity": "Uncommon",
+    "Type": "Income",
+    "Description": "-1000 Max Health. +2000 Gold",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755358138/Philosopher_Stone_yosoqv.png"
+  },
+  {
+    "Name": "Transmute",
+    "Rarity": "Rare",
+    "Type": "Bounty",
+    "Description": "+100% Kill Bounty. 10% chance to receive and additional +100% Bounty Gold.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755358293/BTNTransmute_rjbp9j.png"
+  },
+  {
+    "Name": "Improved Attacks",
+    "Rarity": "Common",
+    "Type": "Damage Boost",
+    "Description": "+5% Normal/Piercing/Magic/Siege/Chaos Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755362299/BTNAttack_g44z59.png"
+  },
+  {
+    "Name": "Rejuvenating Petal",
+    "Rarity": "Uncommon",
+    "Type": "Regen",
+    "Description": "+40 Health Regen. Regenerate 400 health over 3 seconds every 10 seconds, scaling with +% HP Regen.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755362511/Rejuvenation_Petal_nlw954.png"
+  },
+  {
+    "Name": "Improved Chaos Attacks",
+    "Rarity": "Common",
+    "Type": "Damage Boost",
+    "Description": "+10% Chaos Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755363246/Improved_Chaos_Attack_debhhk.png"
+  },
+  {
+    "Name": "Improved Magic Attacks",
+    "Rarity": "Common",
+    "Type": "Damage Boost",
+    "Description": "+10% Magic Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755363530/Improved_Magic_Attacks_nwbzdp.png"
+  },
+  {
+    "Name": "Mask of Death",
+    "Rarity": "Uncommon",
+    "Type": "HP",
+    "Description": "+1000 Max HP. Heal 15 health when enemy dies.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755363658/Mask_of_Death_lyvdrj.png"
+  },
+  {
+    "Name": "Ignite",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "When a burning enemy dies, spreads 25% of Fire stacks to an enemy within 600 range.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755363827/BTNIncinerate_bzh9zi.png"
+  },
+  {
+    "Name": "Growing Spikes",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. +6 Spikes Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755363997/BTNAdvancedCreatureCarapace_hmralb.png"
+  },
+  {
+    "Name": "Improved Siege Attacks",
+    "Rarity": "Common",
+    "Type": "Damage Boost",
+    "Description": "+10% Siege Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364106/Improved_Siege_Attacks_sckfjo.png"
+  },
+  {
+    "Name": "Magic Seeds",
+    "Rarity": "Uncommon",
+    "Type": "HP",
+    "Description": "+1000 Max HP. +5 Max HP every second.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364235/Magic_Seeds_gxmfg7.png"
+  },
+  {
+    "Name": "Cursed Treasure",
+    "Rarity": "Rare",
+    "Type": "Income",
+    "Description": "-100 HP Regen. +5000 Gold.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364337/Cursed_Treasure_uvz9wj.png"
+  },
+  {
+    "Name": "Multiplication Gems",
+    "Rarity": "Uncommon",
+    "Type": "Utility",
+    "Description": "Gain 3 extra copies of the next 500 Gold (Common) Upgrade you purchase, but does not work on Magic Coins, Magic Treasures or Black Markets.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364462/BTN3M3_vr9q3p.png"
+  },
+  {
+    "Name": "Reactive Armor",
+    "Rarity": "Rare",
+    "Type": "Armor",
+    "Description": "+10 Armor. Gain 0.1 Bonus Armor when attacked, stacking, resetting every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364810/BTNHumanArmorUpThree_ifmpkt.png"
+  },
+  {
+    "Name": "Critical Strike",
+    "Rarity": "Uncommon",
+    "Type": "Critical",
+    "Description": "+5% Critical Strike Chance",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364883/BTNCriticalStrike_v0b0dp.png"
+  },
+  {
+    "Name": "Focusfire",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+25% Damage for Single Target Weapons",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365055/BTNMarksmanship_dkuquj.png"
+  },
+  {
+    "Name": "Deflection",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+80 Spikes Damage. +15 Damage Reduction, but cannot reduce an attack below 75% of its damage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365181/BTNDefend_f5h7qx.png"
+  },
+  {
+    "Name": "Gold Mine",
+    "Rarity": "Uncommon",
+    "Type": "Income",
+    "Description": "+10 Gold per second. +10% Gold per second.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365281/BTNGoldmine_hltrmc.png"
+  },
+  {
+    "Name": "Maw of Death",
+    "Rarity": "Uncommon",
+    "Type": "Mana Shield",
+    "Description": "+2000 Mana Shield. Restore 15 mana when an enemy dies.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365418/Maw_of_Death_o0agmz.png"
+  },
+  {
+    "Name": "Shatter",
+    "Rarity": "Rare",
+    "Type": "Frost",
+    "Description": "+25% Damage to enemies who are or have been Frozen.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365509/Shatter_ql3hub.png"
+  },
+  {
+    "Name": "Puncturing Spikes",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+80 Spikes Damage. Attackers take 5% increased Spikes Damage, stacking with each attack.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365712/Puncturing_Spikes_p5gdpg.png"
+  },
+  {
+    "Name": "Molten Spikes",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+80 Spikes Damage. Attackers have a 20% chance to be lit on fire, receiving 200 Fire stacks.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365787/Molten_Spikes_ihudx1.png"
+  },
+  {
+    "Name": "Bounty Hunter",
+    "Rarity": "Uncommon",
+    "Type": "Bounty",
+    "Description": "+50% Kill Bounty",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365858/BTNSpy_quohjv.png"
+  },
+  {
+    "Name": "Power Generator",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+2% Damage. +1% Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755365947/BTNPowerGenerator_wigrti.png"
+  },
+  {
+    "Name": "Dreadlord Fang",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. Heal 4 health when attacked.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366030/BTNVampiricAura_zswcd9.png"
+  },
+  {
+    "Name": "Improved Normal Attacks",
+    "Rarity": "Common",
+    "Type": "Damage Boost",
+    "Description": "+10% Normal Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366301/Improved_Normal_Attacks_nyguhi.png"
+  },
+  {
+    "Name": "Potent Poison",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+10% Poison damage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366483/BTNPoisonArrow_suqvre.png"
+  },
+  {
+    "Name": "Shredding Spikes",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. +10% Spikes Damage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366629/BTNAdvancedSpikedBarricades_qvtmlv.png"
+  },
+  {
+    "Name": "Entangled Gold Mine",
+    "Rarity": "Uncommon",
+    "Type": "Income",
+    "Description": "+10 Gold per second. +1 Gold per second every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366722/BTNEntangleMine_jqhbgf.png"
+  },
+  {
+    "Name": "Dazing Stuns",
+    "Rarity": "Rare",
+    "Type": "Stun",
+    "Description": "+50% Stun Duration.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366803/BTNStun_mbtmnz.png"
+  },
+  {
+    "Name": "Poisonous Spikes",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+80 Spikes Damage. Attackers are poisoned for 2 seconds, taking 100 Spikes/Poison damage every 0.5 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755366978/Poisonous_Spike_hl508g.png"
+  },
+  {
+    "Name": "Spiky Armor",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+10 Armor. +1% Spikes Damage when attacked, resetting every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367121/Spiky_Armor_oriyiy.png"
+  },
+  {
+    "Name": "Tower Armor",
+    "Rarity": "Uncommon",
+    "Type": "Armor",
+    "Description": "+5 Armor",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367280/BTNHumanArmorUpTwo_gol03z.png"
+  },
+  {
+    "Name": "Arcane mark",
+    "Rarity": "Epic",
+    "Type": "Mana Shield",
+    "Description": "+10000 Mana Shield. +1% Damage per 2000 Mana Shield while Mana Shield is active.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367535/Arcane_Mark_yvavys.png"
+  },
+  {
+    "Name": "Chaos Legion",
+    "Rarity": "Epic",
+    "Type": "Damage Boost",
+    "Description": "+100% Chaos Damage. +5% Chaos Damage per Chaos orb.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367649/BTNDarkSummoning_z6rmxj.png"
+  },
+  {
+    "Name": "Cursed Spikeshield",
+    "Rarity": "Epic",
+    "Type": "Spikes",
+    "Description": "+100% Spikes Damage. +1 Armor per Spiked Barricade.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367861/BTNAdvancedUnholyArmor_ujky38.png"
+  },
+  {
+    "Name": "Blessed Armor",
+    "Rarity": "Rare",
+    "Type": "Armor",
+    "Description": "+10 Armor. +1.5 Armor every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367940/BTNInvulnerable_ujooac.png"
+  },
+  {
+    "Name": "Black Market",
+    "Rarity": "Common",
+    "Type": "Utility",
+    "Description": "Buy 1 Uncommon Weapon or Spikes Damage Upgrade of your choosing. The Black Market lasts until a choice is made.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755368020/BTNBlackMarket_weexim.png"
+  },
+  {
+    "Name": "Armor-Plated Spikes",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. Gain 1 Bonus Armor every second, up to 10 Bonus Armor. Lose 1 Bonus Armor when attacked.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755368126/Protruding_Spikes_apfuw4.png"
+  },
+  {
+    "Name": "Golden Ring",
+    "Rarity": "Epic",
+    "Type": "Bounty",
+    "Description": "+200% Kill Bounty. +1% Damage per 50% Kill Bounty.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755370400/BTNGoldRing_oecvya.png"
+  },
+  {
+    "Name": "Natures Fang",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. Gain 0.04 HP Regen when attacked.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755370482/Natures_Fang_bcg0dh.png"
+  },
+  {
+    "Name": "Wavefire",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+25% Damage for Wave Weapons.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755370560/BTNMove_yj0hav.png"
+  },
+  {
+    "Name": "Scroll of Piercing",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+20% Piercing Damage. +3% Piercing Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755370887/BTNSnazzyScroll_pfyach.png"
+  },
+  {
+    "Name": "Sharpened Spikes",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+80 Spikes Damage. +30% Spikes Damage",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755371614/BTNImprovedSpikedBarricades_ahn4cy.png"
+  },
+  {
+    "Name": "Healing Hand",
+    "Rarity": "Uncommon",
+    "Type": "Healing",
+    "Description": "+25% Healing",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755371698/BTNHeal_jkatsk.png"
+  },
+  {
+    "Name": "Duplicator",
+    "Rarity": "Rare",
+    "Type": "Utility",
+    "Description": "+1 extra copy of the next Rare Weapon or Spikes Damage Upgrade. Can be activated directly from the shop Inventory to create a copy of an existing Weapon or Spikes Damage Upgrade.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755371893/BTNMirrorImage_p75dce.png"
+  },
+  {
+    "Name": "Splashfire",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+25% Damage for Splash Weapons.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755371977/BTNLoad_xeqq4r.png"
+  },
+  {
+    "Name": "Bash",
+    "Rarity": "Uncommon",
+    "Type": "Stun",
+    "Description": "+20% Damage to Stunned enemies.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372088/BTNBash_mdxt0o.png"
+  },
+  {
+    "Name": "Energy Shield",
+    "Rarity": "Rare",
+    "Type": "Mana Shield",
+    "Description": "+4000 Mana Shield. +25% Damage Reduction while Mana Shield is active.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372187/Mana_Shield_k0brcm.png"
+  },
+  {
+    "Name": "Scroll of Chaos",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+20% Chaos Damage. +3% Chaos Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372281/BTNScrollOfRegenerationGreen_djgchh.png"
+  },
+  {
+    "Name": "Scroll of Magic",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+20% Magic Damage. +3% Magic Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372422/BTNBansheeMaster_lc5z9o.png"
+  },
+  {
+    "Name": "Living Wood",
+    "Rarity": "Rare",
+    "Type": "HP",
+    "Description": "+2000 Max HP. When brought below 35% health, heals 1500 health over 10 seconds, scaling with +% Max HP.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372581/Living_Wood_xpviyu.png"
+  },
+  {
+    "Name": "Frost Armor",
+    "Rarity": "Rare",
+    "Type": "Armor",
+    "Description": "+10 Armor. Attackers receive 5 stacks of Frost.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372707/Frost_Armor_tocful.png"
+  },
+  {
+    "Name": "Renew",
+    "Rarity": "Rare",
+    "Type": "Regen",
+    "Description": "+80 HP Regen. +25% HP Regen.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372800/Renew_ffqvbm.png"
+  },
+  {
+    "Name": "Areafire",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+20% Area of Effect for Area Weapons",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755411807/BTNAttackGround_mhzcts.png"
+  },
+  {
+    "Name": "Blessed Steel",
+    "Rarity": "Epic",
+    "Type": "Damage Boost",
+    "Description": "+100% Normal Damage. +5% Normal Damage per Throwing Axe.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755411924/BTNThoriumMelee_gxkozh.png"
+  },
+  {
+    "Name": "Scroll of Siege",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+20% Siege Damage. +3% Siege Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755411997/BTNScrollUber_gwyohf.png"
+  },
+  {
+    "Name": "Magic Gemstone",
+    "Rarity": "Epic",
+    "Type": "Damage Boost",
+    "Description": "+100% Magic Damage. +5% Magic Damage per Magic Missile",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755367250/BTNEnchantedGemstone_jk4y6z.png"
+  },
+  {
+    "Name": "Gnashing Teeth",
+    "Rarity": "Epic",
+    "Type": "Spikes",
+    "Description": "+200 Spikes Damage. +1% Spikes damage taken by enemies per 2% of their health missing.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755412155/BTNHowlOfTerror_srfsa0.png"
+  },
+  {
+    "Name": "Wisp",
+    "Rarity": "Uncommon",
+    "Type": "Regen",
+    "Description": "+40 HP Regen. +0.2 HP Regen every second.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755412251/Wisp_kj4xgk.png"
+  },
+  {
+    "Name": "Command Aura",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+25% Damage for 300 and 600 Attack Range Weapons.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755412364/BTNGnollCommandAura_oyay5t.png"
+  },
+  {
+    "Name": "Freezing Cold",
+    "Rarity": "Uncommon",
+    "Type": "Frost",
+    "Description": "+10% Frost damage & effect strength",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755412434/BTNFreezingBreath_odpqgb.png"
+  },
+  {
+    "Name": "Enchanted Moon Arrow",
+    "Rarity": "Epic",
+    "Type": "Damage Boost",
+    "Description": "+100% Piercing Damage. +5% Piercing Damage per Bow.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755412525/BTNAdvancedStrengthOfTheMoon_xezxkt.png"
+  },
+  {
+    "Name": "Bloody Spikes",
+    "Rarity": "Uncommon",
+    "Type": "Spikes",
+    "Description": "+40 Spikes Damage. Attackers are wounded, taking 20 Spikes damage every 0.5 seconds until death, stacking at 50% efficiency (+10 damage) with each following attack.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755413203/Bloody_Spikes_c4lv5k.png"
+  },
+  {
+    "Name": "Ankh of Reconstruction",
+    "Rarity": "Rare",
+    "Type": "HP",
+    "Description": "+2000 Max HP. +1 charge of Reconstruction. Upon taking fatal damage, fully repair the Survivor's Tower, using up 1 charge of Reconstruction.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755413331/Ankh_of_Reconstruction_em7eaz.png"
+  },
+  {
+    "Name": "Evasion",
+    "Rarity": "Uncommon",
+    "Type": "Dodge",
+    "Description": "+10% Dodge",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755413457/BTNEvasion_xswkod.png"
+  },
+  {
+    "Name": "Normal Scroll",
+    "Rarity": "Uncommon",
+    "Type": "Damage Boost",
+    "Description": "+20% Normal Damage. +3% Normal Damage every 30 seconds.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755413625/BTNScroll_h8begv.png"
+  },
+  {
+    "Name": "Crypt Carapace",
+    "Rarity": "Epic",
+    "Type": "Spikes",
+    "Description": "+200 Spikes Damage. Attackers take additional Spikes Damage equal to 30% of damage dealt by the attack.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755413764/BTNThornShield_wmgmdn.png"
+  },
+  {
+    "Name": "Poison Armor",
+    "Rarity": "Rare",
+    "Type": "Armor",
+    "Description": "+10 Armor. Attackers are poisoned for 3 seconds, causing the Survivor's tower to regenerate 3 health per second for each affected enemy. Increased by Poison daamge multipliers.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755413886/Poison_Armor_ioetkd.png"
+  },
+  {
+    "Name": "Refined Explosives",
+    "Rarity": "Epic",
+    "Type": "Damage Boost",
+    "Description": "+100% Siege Damage. +5% Siege Damage per Boulder.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755414011/BTNFragmentationBombs_z7f3gl.png"
+  },
+  {
+    "Name": "Unbreakable Armor",
+    "Rarity": "Epic",
+    "Type": "Armor",
+    "Description": "+25 Armor. +1 Damage Reduction per 1 Armor, but cannot reduce an attack below 25% of its damage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755414107/Unbreakable_Armor_tinymr.png"
+  },
+  {
+    "Name": "Recharge",
+    "Rarity": "Rare",
+    "Type": "Mana Shield",
+    "Description": "+4000 Mana Shield. +25% Mana Regeneration.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755415982/Recharge_z3hhmv.png"
+  },
+  {
+    "Name": "Energy Pulse",
+    "Rarity": "Uncommon",
+    "Type": "Mana Shield",
+    "Description": "+2000 Mana Shield. Stuns all enemies for 1 second when Mana Shield is depleted.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755416049/Energy_Pulse_uom0ho.png"
+  },
+  {
+    "Name": "Moonwell",
+    "Rarity": "Uncommon",
+    "Type": "Mana Shield",
+    "Description": "+2000 Mana Shield. +10 Mana Shield every second",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755416266/Moonwell_gtfebl.png"
+  },
+  {
+    "Name": "Engineering Upgrade",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+100% Damage for 500 Gold (Common) Weapons.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755416478/BTNEngineeringUpgrade_xfryhw.png"
+  },
+  {
+    "Name": "Mastercrafted Masonry",
+    "Rarity": "Epic",
+    "Type": "HP",
+    "Description": "+5000 Max HP. +1% Damage per 1000 Max HP Gained",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755416704/Mastercrafted_Masonry_a13rmn.png"
+  },
+  {
+    "Name": "Orb of Power",
+    "Rarity": "Epic",
+    "Type": "Damage Boost",
+    "Description": "+30% Normal/Piercing/Magic/Siege/Chaos/Spikes Damage. +30% Damage to Stunned enemies. +15% Poison Damage and damage over time. +15% Frost damage and effect strength. +15% Fire damage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755416931/BTNOrb_yoz6lr.png"
+  },
+  {
+    "Name": "Multifire",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+25% Enemies hit by Bounce and Barrage.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755608185/BTNPatrol_tlxzzd.png"
+  },
+  {
+    "Name": "Trueshot Aura",
+    "Rarity": "Rare",
+    "Type": "Damage Boost",
+    "Description": "+25% Damage for 900 and 1200 Attack Range Weapons.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755608352/BTNTrueShot_b07acv.png"
+  },
+  {
+    "Name": "Magic Treasure",
+    "Rarity": "Common",
+    "Type": "Income",
+    "Description": "When used, gain +0 Gold. Gold value increases every second, starting at 5 per second, adding 1% more every second. Purchasing a second Magic Treasure activates the first, granting the gold contained within it.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755669275/BTNChestOfGold_hsibzi.png"
+  },
+  {
+    "Name": "Gold Delivery",
+    "Rarity": "Rare",
+    "Type": "Income",
+    "Description": "+20 Gold per second. Receive 1000 gold every 30 seconds, increased by +% Gold per second.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1759437826/BTNBloodElfSupplyWagon_tgai7y.png"
+  },
+  {
+    "Name": "Golden Medallion",
+    "Rarity": "Rare",
+    "Type": "Income",
+    "Description": "+100% Kill Bounty. Every 500 enemies killed grants +50% Kill Bounty permanently.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1759438038/BTNMedalionOfCourage_tfkvid.png"
+  },
+  {
+    "Name": "Imbued Masonry",
+    "Rarity": "Rare",
+    "Type": "HP",
+    "Description": "+2000 Max HP. +25% Max HP",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1764253090/ImbuedMasonry_ss7fmq.png"
+  },
+  {
+    "Name": "Hungering Maw",
+    "Rarity": "Rare",
+    "Type": "Spikes",
+    "Description": "+80 Spikes Damage. Heal 12 health when attacked.",
+    "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1771883890/HungeringMaw_cmcfic.png"
+  }
+]

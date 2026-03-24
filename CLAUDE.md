@@ -5,14 +5,16 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Technology Stack
 
-- **Engine**: [CHOOSE: Godot 4 / Unity / Unreal Engine 5]
-- **Language**: [CHOOSE: GDScript / C# / C++ / Blueprint]
+- **Engine**: Bevy 0.18.1 (Rust ECS game engine)
+- **Language**: Rust
 - **Version Control**: Git with trunk-based development
-- **Build System**: [SPECIFY after choosing engine]
-- **Asset Pipeline**: [SPECIFY after choosing engine]
+- **Build System**: Cargo
+- **Asset Pipeline**: Bevy Asset System
 
-> **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
-> dedicated sub-specialists. Use the set matching your engine.
+> **Note**: No Bevy-specific specialist agent exists. General agents
+> (gameplay-programmer, engine-programmer, lead-programmer) handle all
+> engine work. Always cross-reference `docs/engine-reference/bevy/VERSION.md`
+> before suggesting Bevy APIs — the LLM's training data covers up to ~0.15.
 
 ## Project Structure
 
@@ -20,7 +22,7 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Engine Version Reference
 
-@docs/engine-reference/godot/VERSION.md
+@docs/engine-reference/bevy/VERSION.md
 
 ## Technical Preferences
 
