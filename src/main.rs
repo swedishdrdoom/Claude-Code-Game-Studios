@@ -18,12 +18,5 @@ fn main() {
             ..default()
         }))
         .add_plugins(TowerOfDoomPlugin)
-        .add_systems(Startup, start_game)
         .run();
-}
-
-/// Skip main menu for prototype — go straight to grace period.
-fn start_game(mut next_state: ResMut<NextState<GameState>>) {
-    next_state.set(GameState::GracePeriod);
-    info!("Starting game — entering grace period");
 }

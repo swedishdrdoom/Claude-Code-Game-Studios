@@ -97,12 +97,20 @@ pub struct TooltipPanel;
 #[derive(Component)]
 pub struct TooltipText;
 
+#[derive(Component)]
+pub struct StartScreenRoot;
+
+#[derive(Component)]
+pub struct StartGameButton;
+
 pub struct UiPlugin;
 
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
         app.init_resource::<GameSpeed>()
-            .add_systems(Startup, (setup_hud, setup_shop))
+            .add_systems(Startup, (setup_hud, setup_shop, setup_start_screen))
+            .add_systems(OnExit(GameState::MainMenu), cleanup_start_screen)
+            .add_systems(Update, handle_start_button.run_if(in_state(GameState::MainMenu)))
             .add_systems(Update, (
                 update_hp_text,
                 update_gold_text,
@@ -1074,5 +1082,151 @@ fn handle_retry_button(
 
         next_state.set(GameState::GracePeriod);
         info!("Retrying — new run!");
+    }
+}
+
+// === Start Screen ===
+
+fn setup_start_screen(mut commands: Commands) {
+    info!("Setting up start screen");
+    commands.spawn((
+        StartScreenRoot,
+        Node {
+            position_type: PositionType::Absolute,
+            left: Val::Px(0.0),
+            top: Val::Px(0.0),
+            width: Val::Percent(100.0),
+            height: Val::Percent(100.0),
+            justify_content: JustifyContent::Center,
+            align_items: AlignItems::Center,
+            ..default()
+        },
+        BackgroundColor(Color::srgba(0.08, 0.08, 0.15, 0.98)),
+        GlobalZIndex(200),
+    )).with_children(|root| {
+        // Center column
+        root.spawn(Node {
+            flex_direction: FlexDirection::Column,
+            align_items: AlignItems::Center,
+            row_gap: Val::Px(30.0),
+            max_width: Val::Px(700.0),
+            ..default()
+        }).with_children(|col| {
+            // Title
+            col.spawn((
+                Text::new("Tower of Doom"),
+                TextFont { font_size: 42.0, ..default() },
+                TextColor(Color::srgb(0.9, 0.8, 0.3)),
+            ));
+
+            // 3-card row
+            col.spawn(Node {
+                flex_direction: FlexDirection::Row,
+                column_gap: Val::Px(20.0),
+                ..default()
+            }).with_children(|row| {
+                let cards = [
+                    ("1", "Buy weapons and upgrades for your tower"),
+                    ("2", "Don't forget to invest in gold upgrades"),
+                    ("3", "Survive as long as possible"),
+                ];
+                for (num, text) in cards {
+                    row.spawn((
+                        Node {
+                            flex_direction: FlexDirection::Column,
+                            align_items: AlignItems::Center,
+                            padding: UiRect::all(Val::Px(16.0)),
+                            width: Val::Px(200.0),
+                            row_gap: Val::Px(10.0),
+                            ..default()
+                        },
+                        BackgroundColor(Color::srgba(0.15, 0.15, 0.25, 0.9)),
+                    )).with_children(|card| {
+                        // Number circle
+                        card.spawn((
+                            Node {
+                                width: Val::Px(36.0),
+                                height: Val::Px(36.0),
+                                justify_content: JustifyContent::Center,
+                                align_items: AlignItems::Center,
+                                ..default()
+                            },
+                            BackgroundColor(Color::srgb(0.8, 0.7, 0.2)),
+                        )).with_children(|circle| {
+                            circle.spawn((
+                                Text::new(num),
+                                TextFont { font_size: 22.0, ..default() },
+                                TextColor(Color::srgb(0.05, 0.05, 0.1)),
+                            ));
+                        });
+                        // Description
+                        card.spawn((
+                            Text::new(text),
+                            TextFont { font_size: 16.0, ..default() },
+                            TextColor(Color::srgb(0.8, 0.8, 0.9)),
+                        ));
+                    });
+                }
+            });
+
+            // Tip text
+            col.spawn((
+                Node {
+                    max_width: Val::Px(600.0),
+                    padding: UiRect::all(Val::Px(12.0)),
+                    justify_content: JustifyContent::Center,
+                    ..default()
+                },
+                BackgroundColor(Color::srgba(0.1, 0.1, 0.2, 0.8)),
+            )).with_children(|tip| {
+                tip.spawn((
+                    Text::new("You will have a 30 second preparation time to reroll your initial shop, and buy upgrades before the horde appears"),
+                    TextFont { font_size: 14.0, ..default() },
+                    TextColor(Color::srgb(0.6, 0.7, 0.8)),
+                ));
+            });
+
+            // Start Game button
+            col.spawn((
+                StartGameButton,
+                Button,
+                Node {
+                    padding: UiRect::axes(Val::Px(40.0), Val::Px(14.0)),
+                    justify_content: JustifyContent::Center,
+                    align_items: AlignItems::Center,
+                    ..default()
+                },
+                BackgroundColor(Color::srgb(0.2, 0.6, 0.2)),
+            )).with_children(|btn| {
+                btn.spawn((
+                    Text::new("Start Game"),
+                    TextFont { font_size: 22.0, ..default() },
+                    TextColor(Color::WHITE),
+                ));
+            });
+        });
+    });
+}
+
+fn cleanup_start_screen(
+    mut commands: Commands,
+    query: Query<Entity, With<StartScreenRoot>>,
+) {
+    info!("Cleaning up start screen");
+    for entity in &query {
+        commands.entity(entity).despawn();
+    }
+}
+
+
+fn handle_start_button(
+    interaction_query: Query<&Interaction, (Changed<Interaction>, With<StartGameButton>)>,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    for interaction in &interaction_query {
+        if *interaction == Interaction::Pressed {
+            next_state.set(GameState::GracePeriod);
+            info!("Starting game!");
+        }
     }
 }

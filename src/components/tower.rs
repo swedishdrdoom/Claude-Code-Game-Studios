@@ -131,6 +131,22 @@ pub struct PurchasedUpgrades {
     pub items: Vec<String>,
 }
 
+/// Marker for tower HP bar background.
+#[derive(Component)]
+pub struct TowerHpBarBg;
+
+/// Marker for tower HP bar fill.
+#[derive(Component)]
+pub struct TowerHpBarFill;
+
+/// Marker for tower mana shield bar background.
+#[derive(Component)]
+pub struct TowerManaBarBg;
+
+/// Marker for tower mana shield bar fill.
+#[derive(Component)]
+pub struct TowerManaBarFill;
+
 // Constants
 pub const STARTING_HP: f32 = 1500.0;
 pub const STARTING_ARMOR: f32 = 0.0;

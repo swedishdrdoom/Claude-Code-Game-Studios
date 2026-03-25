@@ -3,11 +3,55 @@ use rand::Rng;
 
 use crate::components::combat::*;
 use crate::components::economy::*;
+use crate::components::enemy::FloatingText;
 use crate::components::run::GameState;
 use crate::components::scaling::*;
 use crate::components::stats::DamageBonuses;
 use crate::components::tower::*;
 use crate::plugins::content::{WeaponDatabase, UpgradeDatabase};
+
+/// Weapons with unimplemented abilities — excluded from shop until mechanics are built.
+const DISABLED_WEAPONS: &[&str] = &[
+    // Stun
+    "Demon Eye", "Shocker", "Serpent", "Magic Bolt", "Chaos Web", "Entangler",
+    "Ballista", "Living Water", "Net Thrower", "Storm Hammer", "Basher",
+    "Cluster Rockets", "Bombs",
+    // Frost (only weapons with additional unimplemented mechanics)
+    "Ice Beam", "Icebreather", "Ice Generator",
+    // Poison
+    "Living Spittle", "Poison Bow", "Poison Bomb", "Poison Cloud", "Chaotic Spirit",
+    "Poison Spear",
+    // Fire
+    "Flame Pillar", "Fire Bow", "Chaos Heart", "Lavaspitter", "Flame Generator",
+    "Flamecaster", "Immolation",
+    // Vulnerability debuffs (+X% damage taken)
+    "Death Coil", "Poison Glaive", "Glaive Thrower", "Thorn", "Steam Cannon",
+    "Arcane Blaster", "Liquid Fire Hurler",
+    // Stat-scaling damage
+    "Bouncing Shield", "Spell Glaive", "Blight Aura", "Meatapult",
+    // Summons / special mechanics
+    "Necromancer's Tome", "Inferno Stone", "Goblin Land Mines", "Storm Generator",
+    "Death Generator", "Phoenix Claw", "Wind Spear", "Impaler", "Ale Launcher",
+    "Parasite", "Firebreather", "Manastone", "Healthstone",
+];
+
+/// Upgrades with unimplemented mechanics — excluded from shop until built.
+const DISABLED_UPGRADES: &[&str] = &[
+    // Unimplemented systems
+    "Critical Decimation", "Critical Strike",
+    "Dazing Stuns", "Bash",
+    "Shatter", "Freezing Cold",
+    "Evasion",
+    "Healing Hand",
+    "Searing Heat", "Potent Poison", "Ignite",
+    // Utility / activation mechanics
+    "Magic Treasure", "Multiplication Gems", "Black Market", "Duplicator",
+    // Core mechanic unimplemented (stat works, trigger doesn't)
+    "Ankh of Reconstruction", "Living Wood", "Energy Pulse", "Golden Medallion",
+    // On-attacker effects
+    "Frost Armor", "Poison Armor", "Molten Spikes",
+    "Poisonous Spikes", "Puncturing Spikes", "Bloody Spikes", "Gnashing Teeth",
+];
 
 pub struct EconomyPlugin;
 
@@ -118,6 +162,7 @@ pub fn generate_shop_inventory(
         let rarity = roll_rarity();
         let matching: Vec<(usize, &str)> = weapons.weapons.iter().enumerate()
             .filter(|(_, w)| rarity_matches(&w.rarity, &rarity))
+            .filter(|(_, w)| !DISABLED_WEAPONS.contains(&w.name.as_str()))
             .map(|(i, w)| (i, w.name.as_str()))
             .collect();
 
@@ -133,6 +178,7 @@ pub fn generate_shop_inventory(
             rarity,
             item_type: ShopItemType::Weapon,
             definition_index: def_idx,
+            price_override: None,
         });
     }
 
@@ -142,6 +188,7 @@ pub fn generate_shop_inventory(
         let rarity = roll_rarity();
         let matching: Vec<(usize, &str, &str)> = upgrades.upgrades.iter().enumerate()
             .filter(|(_, u)| rarity_matches(&u.rarity, &rarity))
+            .filter(|(_, u)| !DISABLED_UPGRADES.contains(&u.name.as_str()))
             .map(|(i, u)| (i, u.name.as_str(), u.upgrade_type.as_str()))
             .collect();
 
@@ -164,11 +211,14 @@ pub fn generate_shop_inventory(
 
         let idx = rng.random_range(0..weighted.len());
         let (def_idx, name) = weighted[idx];
+        // Philosopher's Stone costs health, not gold
+        let price_override = if name == "Philosopher's Stone" { Some(0) } else { None };
         *slot = Some(ShopItem {
             name: name.to_string(),
             rarity,
             item_type: ShopItemType::Upgrade,
             definition_index: def_idx,
+            price_override,
         });
     }
 }
@@ -185,6 +235,7 @@ fn generate_initial_shop(
 fn tick_passive_income(
     time: Res<Time>,
     mut gold: ResMut<Gold>,
+    mut commands: Commands,
 ) {
     if gold.per_second > 0.0 {
         let effective_rate = gold.per_second * (1.0 + gold.per_second_bonus_percent);
@@ -195,6 +246,18 @@ fn tick_passive_income(
             let earned = effective_rate as u32;
             gold.current += earned;
             gold.total_earned += earned;
+            // Floating gold text above tower
+            commands.spawn((
+                FloatingText {
+                    lifetime: 0.8,
+                    max_lifetime: 0.8,
+                    rise_speed: 60.0,
+                },
+                Text2d::new(format!("+{}g", earned)),
+                TextFont { font_size: 40.0, ..default() },
+                TextColor(Color::srgb(1.0, 0.85, 0.0)),
+                Transform::from_xyz(0.0, 55.0, 2.0),
+            ));
         }
     }
 }
@@ -220,10 +283,10 @@ fn handle_weapon_purchase(
     weapons: Res<WeaponDatabase>,
     mut commands: Commands,
     mut tower_query: Query<(
-        &mut HealPerHit, &mut ManaShieldOnHit, &mut MaxHpPerHit,
+        &mut HealPerHit, &mut ManaShieldOnHit,
     ), With<Tower>>,
 ) {
-    let Ok((mut heal_per_hit, mut shield_on_hit, mut maxhp_on_hit)) = tower_query.single_mut() else {
+    let Ok((mut heal_per_hit, mut shield_on_hit)) = tower_query.single_mut() else {
         return;
     };
 
@@ -231,6 +294,23 @@ fn handle_weapon_purchase(
         let def = &weapons.weapons[event.definition_index];
         let damage_type = parse_damage_type(&def.weapon_type);
         let attack_pattern = parse_attack_pattern(&def.attack_type);
+
+        let ability = &def.ability;
+
+        // Parse frost — any weapon with "Frost" in ability applies frost slow
+        let applies_frost = ability.contains("Frost");
+        if applies_frost {
+            info!("  Frost weapon: applies 50% slow + 25% attack speed reduction");
+        }
+
+        // Parse Blood Bomb ability — stored on the weapon, not the tower
+        let mut max_hp_per_attack = 0.0;
+        if ability.contains("Max HP per enemy hit") || ability.contains("Max HP Per Enemy Hit") {
+            if let Some(val) = parse_first_number(ability) {
+                max_hp_per_attack = val;
+                info!("  Blood Bomb: +{} Max HP per attack", val);
+            }
+        }
 
         commands.spawn(WeaponInstance {
             definition_index: event.definition_index,
@@ -241,31 +321,21 @@ fn handle_weapon_purchase(
             range: def.range as f32,
             damage_type,
             attack_pattern,
+            max_hp_per_attack,
+            applies_frost,
         });
 
-        // Parse weapon on-hit abilities
-        let ability = &def.ability;
+        // Parse weapon on-hit abilities (tower-level effects)
         if ability.contains("Heal") && ability.contains("per enemy hit") {
-            // Healing Sprayer: "Heal 10 health per enemy hit"
-            // Holy Bolt: "Heal 40 health per enemy hit"
-            // Chain Heal: "Heal 200 health per enemy hit"
             if let Some(val) = parse_first_number(ability) {
                 heal_per_hit.amount += val;
                 info!("  On-hit: +{} HP per hit (total: {})", val, heal_per_hit.amount);
             }
         }
         if ability.contains("Mana Shield per enemy hit") || ability.contains("Mana Shield Per Enemy Hit") {
-            // Soulstealer: "Attacks grant +3 Mana Shield per enemy hit."
             if let Some(val) = parse_first_number(ability) {
                 shield_on_hit.amount += val;
                 info!("  On-hit: +{} Mana Shield per hit (total: {})", val, shield_on_hit.amount);
-            }
-        }
-        if ability.contains("Max HP per enemy hit") || ability.contains("Max HP Per Enemy Hit") {
-            // Blood Bomb: "Attacks grant +3 Max HP per enemy hit."
-            if let Some(val) = parse_first_number(ability) {
-                maxhp_on_hit.amount += val;
-                info!("  On-hit: +{} Max HP per hit (total: {})", val, maxhp_on_hit.amount);
             }
         }
 

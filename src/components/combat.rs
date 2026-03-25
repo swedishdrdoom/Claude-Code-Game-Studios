@@ -33,6 +33,10 @@ pub struct WeaponInstance {
     pub range: f32,
     pub damage_type: DamageType,
     pub attack_pattern: AttackPattern,
+    /// Max HP gained per attack (Blood Bomb). Only this weapon's attacks trigger the gain.
+    pub max_hp_per_attack: f32,
+    /// Whether this weapon applies Frost on hit.
+    pub applies_frost: bool,
 }
 
 /// Marker component for projectile entities.
@@ -80,6 +84,8 @@ pub struct ProjectileData {
     pub damage_type: DamageType,
     pub attack_pattern: AttackPattern,
     pub source_weapon: String,
+    /// Whether the source weapon applies Frost.
+    pub applies_frost: bool,
     /// Entities already hit by this projectile (for bounce chains).
     pub hits: Vec<Entity>,
 }
@@ -96,6 +102,7 @@ pub struct DamageEvent {
     pub position: Vec2,
     pub attack_pattern: AttackPattern,
     pub is_primary_hit: bool,
+    pub applies_frost: bool,
 }
 
 /// Event: enemy was killed.

@@ -4,8 +4,8 @@ use bevy::prelude::*;
 /// All systems use `in_state()` run conditions to activate/deactivate.
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash, Default)]
 pub enum GameState {
-    #[default]
     Loading,
+    #[default]
     MainMenu,
     GracePeriod,
     Playing,

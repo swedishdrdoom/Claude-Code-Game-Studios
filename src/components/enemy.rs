@@ -71,7 +71,7 @@ pub struct GoldBounty {
 
 impl Default for GoldBounty {
     fn default() -> Self {
-        Self { base: 1 }
+        Self { base: 10 }
     }
 }
 
@@ -113,6 +113,22 @@ pub struct EnemyHealthBarBg;
 pub struct EnemyHealthBarFill {
     pub full_width: f32,
 }
+
+/// Marker for enemy HP text display below the sprite.
+#[derive(Component)]
+pub struct EnemyHpText;
+
+/// Marker for the armor type legend panel.
+#[derive(Component)]
+pub struct ArmorLegendPanel;
+
+/// Individual legend entry with its armor type.
+#[derive(Component)]
+pub struct ArmorLegendEntry(pub ArmorType);
+
+/// Text label within a legend entry (distinguishes from color swatch).
+#[derive(Component)]
+pub struct ArmorLegendText;
 
 /// Floating text that rises and fades (gold popups, damage numbers).
 #[derive(Component)]

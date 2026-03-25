@@ -66,7 +66,7 @@
     "Name": "Repair Crew",
     "Rarity": "Common",
     "Type": "Regen",
-    "Description": "+20 Health Regen",
+    "Description": "+4 Health Regen",
     "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755357992/Repair_Crew_dwrvui.png"
   },
   {
@@ -94,7 +94,7 @@
     "Name": "Rejuvenating Petal",
     "Rarity": "Uncommon",
     "Type": "Regen",
-    "Description": "+40 Health Regen. Regenerate 400 health over 3 seconds every 10 seconds, scaling with +% HP Regen.",
+    "Description": "+8 Health Regen. Regenerate 400 health over 3 seconds every 10 seconds, scaling with +% HP Regen.",
     "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755362511/Rejuvenation_Petal_nlw954.png"
   },
   {
@@ -150,7 +150,7 @@
     "Name": "Cursed Treasure",
     "Rarity": "Rare",
     "Type": "Income",
-    "Description": "-100 HP Regen. +5000 Gold.",
+    "Description": "-20 HP Regen. +5000 Gold.",
     "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755364337/Cursed_Treasure_uvz9wj.png"
   },
   {
@@ -353,7 +353,7 @@
     "Name": "Natures Fang",
     "Rarity": "Uncommon",
     "Type": "Spikes",
-    "Description": "+40 Spikes Damage. Gain 0.04 HP Regen when attacked.",
+    "Description": "+40 Spikes Damage. Gain 0.008 HP Regen when attacked.",
     "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755370482/Natures_Fang_bcg0dh.png"
   },
   {
@@ -444,7 +444,7 @@
     "Name": "Renew",
     "Rarity": "Rare",
     "Type": "Regen",
-    "Description": "+80 HP Regen. +25% HP Regen.",
+    "Description": "+16 HP Regen. +25% HP Regen.",
     "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755372800/Renew_ffqvbm.png"
   },
   {
@@ -486,7 +486,7 @@
     "Name": "Wisp",
     "Rarity": "Uncommon",
     "Type": "Regen",
-    "Description": "+40 HP Regen. +0.2 HP Regen every second.",
+    "Description": "+8 HP Regen. +0.2 HP Regen every second.",
     "Image": "https://res.cloudinary.com/dgk8dpxa7/image/upload/v1755412251/Wisp_kj4xgk.png"
   },
   {

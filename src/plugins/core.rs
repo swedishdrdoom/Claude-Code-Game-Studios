@@ -42,6 +42,7 @@ impl Plugin for CorePlugin {
                 heal_on_kill.run_if(in_state(GameState::Playing).or(in_state(GameState::Boss))),
                 tick_scaling_buffs.run_if(in_state(GameState::Playing).or(in_state(GameState::Boss))),
                 draw_range_gizmos,
+                update_tower_bars,
             ));
     }
 }
@@ -58,9 +59,12 @@ fn zoom_camera(
 ) {
     let Ok(mut projection) = camera_query.single_mut() else { return };
     if let Projection::Orthographic(ref mut ortho) = *projection {
-        ortho.scale = 1.5;
+        ortho.scale = 1.65;
     }
 }
+
+const TOWER_BAR_WIDTH: f32 = 60.0;
+const TOWER_BAR_Y: f32 = 45.0; // Above the tower sprite
 
 fn setup_tower(mut commands: Commands) {
     let tower = commands.spawn((
@@ -79,7 +83,48 @@ fn setup_tower(mut commands: Commands) {
             ..default()
         },
         Transform::from_xyz(0.0, 0.0, 1.0),
-    )).id();
+    )).with_children(|parent: &mut ChildSpawnerCommands| {
+        // HP bar background
+        parent.spawn((
+            TowerHpBarBg,
+            Sprite {
+                color: Color::srgba(0.2, 0.2, 0.2, 0.8),
+                custom_size: Some(Vec2::new(TOWER_BAR_WIDTH + 2.0, 5.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, TOWER_BAR_Y, 0.1),
+        ));
+        // HP bar fill
+        parent.spawn((
+            TowerHpBarFill,
+            Sprite {
+                color: Color::srgb(0.1, 0.9, 0.1),
+                custom_size: Some(Vec2::new(TOWER_BAR_WIDTH, 4.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, TOWER_BAR_Y, 0.2),
+        ));
+        // Mana shield bar background (hidden when no shield)
+        parent.spawn((
+            TowerManaBarBg,
+            Sprite {
+                color: Color::srgba(0.2, 0.2, 0.2, 0.0),
+                custom_size: Some(Vec2::new(TOWER_BAR_WIDTH + 2.0, 4.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, TOWER_BAR_Y + 6.0, 0.1),
+        ));
+        // Mana shield bar fill
+        parent.spawn((
+            TowerManaBarFill,
+            Sprite {
+                color: Color::srgba(0.3, 0.5, 1.0, 0.0),
+                custom_size: Some(Vec2::new(TOWER_BAR_WIDTH, 3.0)),
+                ..default()
+            },
+            Transform::from_xyz(0.0, TOWER_BAR_Y + 6.0, 0.2),
+        ));
+    }).id();
     // Insert remaining components (split to avoid tuple size limit)
     commands.entity(tower).insert((
         ManaShieldRegen::default(),
@@ -283,6 +328,53 @@ fn tick_scaling_buffs(
                     }
                 }
             }
+        }
+    }
+}
+
+fn update_tower_bars(
+    tower_query: Query<(&Health, &ManaShield, &Children), With<Tower>>,
+    mut hp_fill: Query<(&mut Sprite, &mut Transform), (With<TowerHpBarFill>, Without<TowerManaBarFill>, Without<TowerManaBarBg>)>,
+    mut mana_fill: Query<(&mut Sprite, &mut Transform), (With<TowerManaBarFill>, Without<TowerHpBarFill>, Without<TowerManaBarBg>)>,
+    mut mana_bg: Query<&mut Sprite, (With<TowerManaBarBg>, Without<TowerHpBarFill>, Without<TowerManaBarFill>)>,
+) {
+    let Ok((health, shield, children)) = tower_query.single() else { return };
+
+    let hp_frac = (health.current / health.max).clamp(0.0, 1.0);
+
+    for child in children.iter() {
+        // HP bar fill
+        if let Ok((mut sprite, mut transform)) = hp_fill.get_mut(child) {
+            let w = TOWER_BAR_WIDTH * hp_frac;
+            sprite.custom_size = Some(Vec2::new(w, 4.0));
+            transform.translation.x = -(TOWER_BAR_WIDTH - w) * 0.5;
+            sprite.color = if hp_frac > 0.5 {
+                Color::srgb(0.1, 0.9, 0.1)
+            } else if hp_frac > 0.25 {
+                Color::srgb(0.9, 0.9, 0.1)
+            } else {
+                Color::srgb(0.9, 0.1, 0.1)
+            };
+        }
+        // Mana shield bar fill
+        if let Ok((mut sprite, mut transform)) = mana_fill.get_mut(child) {
+            if shield.max > 0.0 {
+                let mana_frac = (shield.current / shield.max).clamp(0.0, 1.0);
+                let w = TOWER_BAR_WIDTH * mana_frac;
+                sprite.custom_size = Some(Vec2::new(w, 3.0));
+                transform.translation.x = -(TOWER_BAR_WIDTH - w) * 0.5;
+                sprite.color = Color::srgb(0.3, 0.5, 1.0);
+            } else {
+                sprite.color = Color::srgba(0.0, 0.0, 0.0, 0.0);
+            }
+        }
+        // Mana shield bar background — show/hide with shield
+        if let Ok(mut sprite) = mana_bg.get_mut(child) {
+            sprite.color = if shield.max > 0.0 {
+                Color::srgba(0.2, 0.2, 0.2, 0.8)
+            } else {
+                Color::srgba(0.0, 0.0, 0.0, 0.0)
+            };
         }
     }
 }

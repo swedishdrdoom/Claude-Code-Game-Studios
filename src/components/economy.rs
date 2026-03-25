@@ -62,11 +62,13 @@ pub struct ShopItem {
     pub rarity: Rarity,
     pub item_type: ShopItemType,
     pub definition_index: usize,
+    /// Override rarity-based price (e.g., 0 for Philosopher's Stone).
+    pub price_override: Option<u32>,
 }
 
 impl ShopItem {
     pub fn price(&self) -> u32 {
-        self.rarity.price()
+        self.price_override.unwrap_or_else(|| self.rarity.price())
     }
 }
 

@@ -41,11 +41,11 @@ fn fire_weapons(
     time: Res<Time>,
     mut weapon_query: Query<&mut WeaponInstance>,
     enemy_query: Query<(Entity, &Transform), With<Enemy>>,
-    tower_query: Query<&Transform, With<Tower>>,
+    mut tower_query: Query<(&Transform, &mut crate::components::tower::Health), With<Tower>>,
     mut commands: Commands,
     mut damage_writer: MessageWriter<DamageEvent>,
 ) {
-    let Ok(tower_transform) = tower_query.single() else {
+    let Ok((tower_transform, mut tower_health)) = tower_query.single_mut() else {
         return;
     };
     let tower_pos = tower_transform.translation.truncate();
@@ -92,6 +92,7 @@ fn fire_weapons(
                         weapon.damage_type,
                         weapon.attack_pattern.clone(),
                         &weapon.name,
+                        weapon.applies_frost,
                     );
                 }
                 AttackPattern::Barrage { target_count } => {
@@ -109,8 +110,9 @@ fn fire_weapons(
                             target_pos,
                             weapon.damage,
                             weapon.damage_type,
-                            AttackPattern::SingleTarget, // Each barrage shot hits one target
+                            AttackPattern::SingleTarget,
                             &weapon.name,
+                            weapon.applies_frost,
                         );
                     }
                 }
@@ -132,6 +134,7 @@ fn fire_weapons(
                                 position: *target_pos,
                                 attack_pattern: weapon.attack_pattern.clone(),
                                 is_primary_hit: is_first,
+                                applies_frost: weapon.applies_frost,
                             });
                             is_first = false;
                         }
@@ -161,6 +164,7 @@ fn fire_weapons(
                                 position: *target_pos,
                                 attack_pattern: weapon.attack_pattern.clone(),
                                 is_primary_hit: is_first,
+                                applies_frost: weapon.applies_frost,
                             });
                             is_first = false;
                         }
@@ -177,6 +181,12 @@ fn fire_weapons(
                     );
                 }
             }
+
+            // Blood Bomb: grant Max HP once per attack (only this weapon triggers it)
+            if weapon.max_hp_per_attack > 0.0 {
+                tower_health.max += weapon.max_hp_per_attack;
+                tower_health.current += weapon.max_hp_per_attack;
+            }
         }
     }
 }
@@ -190,6 +200,7 @@ fn spawn_projectile(
     damage_type: DamageType,
     attack_pattern: AttackPattern,
     weapon_name: &str,
+    applies_frost: bool,
 ) {
     // Color projectiles by damage type for visual clarity
     let color = damage_type_color_opaque(damage_type);
@@ -213,6 +224,7 @@ fn spawn_projectile(
             damage_type,
             attack_pattern,
             source_weapon: weapon_name.to_string(),
+            applies_frost,
             hits: Vec::new(),
         },
         Sprite {
@@ -234,6 +246,7 @@ fn spawn_barrage_projectile(
     damage_type: DamageType,
     splash_radius: f32,
     weapon_name: &str,
+    applies_frost: bool,
 ) {
     let color = damage_type_color_opaque(damage_type);
 
@@ -247,6 +260,7 @@ fn spawn_barrage_projectile(
             damage_type,
             attack_pattern: AttackPattern::Barrage { target_count: 1 },
             source_weapon: weapon_name.to_string(),
+            applies_frost,
             hits: Vec::new(),
         },
         BarrageSplash {
@@ -505,6 +519,7 @@ fn move_projectiles(
                             position: enemy_pos,
                             attack_pattern: AttackPattern::SingleTarget,
                             is_primary_hit: is_first,
+                            applies_frost: data.applies_frost,
                         });
                         is_first = false;
                     }
@@ -529,6 +544,7 @@ fn move_projectiles(
                     position: hit_pos,
                     attack_pattern: current_pattern.clone(),
                     is_primary_hit: true,
+                    applies_frost: data.applies_frost,
                 });
                 data.hits.push(current_target);
 
@@ -548,6 +564,7 @@ fn move_projectiles(
                                 position: enemy_pos,
                                 attack_pattern: AttackPattern::SingleTarget,
                                 is_primary_hit: false,
+                                applies_frost: data.applies_frost,
                             });
                         }
                     }
@@ -590,7 +607,7 @@ fn move_projectiles(
 fn apply_damage_to_enemies(
     mut commands: Commands,
     mut events: MessageReader<DamageEvent>,
-    mut enemy_query: Query<(&mut EnemyHealth, &ArmorType, &EnemyArmor, &Transform, &GoldBounty, &Burning), With<Enemy>>,
+    mut enemy_query: Query<(&mut EnemyHealth, &ArmorType, &EnemyArmor, &Transform, &GoldBounty, &Burning, &mut FrostStacks), With<Enemy>>,
     damage_matrix: Res<DamageMatrix>,
     mut killed_writer: MessageWriter<EnemyKilledEvent>,
     mut gold: ResMut<Gold>,
@@ -599,18 +616,16 @@ fn apply_damage_to_enemies(
         &mut crate::components::tower::ManaShield,
         &crate::components::tower::ManaShieldOnHit,
         &crate::components::tower::HealPerHit,
-        &crate::components::tower::MaxHpPerHit,
     ), With<Tower>>,
 ) {
-    let Ok((mut tower_health, mut tower_shield, shield_on_hit, heal_per_hit, maxhp_per_hit)) = tower_query.single_mut() else {
+    let Ok((mut tower_health, mut tower_shield, shield_on_hit, heal_per_hit)) = tower_query.single_mut() else {
         return;
     };
 
     let mut hits_count = 0u32;
-    let mut attacks_count = 0u32;
 
     for event in events.read() {
-        let Ok((mut health, armor_type, enemy_armor, transform, bounty, burning)) = enemy_query.get_mut(event.target) else {
+        let Ok((mut health, armor_type, enemy_armor, transform, bounty, burning, mut frost)) = enemy_query.get_mut(event.target) else {
             continue;
         };
 
@@ -621,8 +636,11 @@ fn apply_damage_to_enemies(
 
         health.current -= final_damage;
         hits_count += 1;
-        if event.is_primary_hit {
-            attacks_count += 1;
+
+        // Apply frost slow (3 second duration, refreshes on each hit)
+        if event.applies_frost {
+            frost.frozen = true;
+            frost.freeze_timer = 3.0;
         }
 
         if health.current <= 0.0 {
@@ -646,21 +664,16 @@ fn apply_damage_to_enemies(
 
     // Apply on-hit effects based on total hits this frame
     if hits_count > 0 {
-        // Mana Shield on hit (Soulstealer: +3 per hit)
-        if shield_on_hit.amount > 0.0 && tower_shield.max > 0.0 {
-            let restore = shield_on_hit.amount * hits_count as f32;
-            tower_shield.current = (tower_shield.current + restore).min(tower_shield.max);
+        // Mana Shield on hit (Soulstealer: +3 per hit — grows max and current)
+        if shield_on_hit.amount > 0.0 {
+            let gain = shield_on_hit.amount * hits_count as f32;
+            tower_shield.max += gain;
+            tower_shield.current += gain;
         }
         // HP on hit (Healing Sprayer, Holy Bolt, Chain Heal, Chaos Swarm)
         if heal_per_hit.amount > 0.0 {
             let heal = heal_per_hit.amount * hits_count as f32;
             tower_health.current = (tower_health.current + heal).min(tower_health.max);
-        }
-        // Max HP per attack (Blood Bomb: +3 Max HP per attack, not per enemy hit)
-        if maxhp_per_hit.amount > 0.0 {
-            let gain = maxhp_per_hit.amount * attacks_count as f32;
-            tower_health.max += gain;
-            tower_health.current += gain; // Also heal the gained amount
         }
     }
 }
