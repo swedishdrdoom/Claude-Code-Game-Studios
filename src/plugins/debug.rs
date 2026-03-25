@@ -394,17 +394,12 @@ fn handle_debug_extras(
 // === Difficulty Override (PostUpdate) ===
 
 fn apply_difficulty_modifier(
-    dbg: Res<DebugState>,
-    cfg: Res<DifficultyConfig>,
-    timer: Res<crate::components::run::RunTimer>,
-    mut wave: ResMut<WaveState>,
+    _dbg: Res<DebugState>,
+    _cfg: Res<DifficultyConfig>,
+    _timer: Res<crate::components::run::RunTimer>,
+    _wave: ResMut<WaveState>,
 ) {
-    if !dbg.active { return; }
-    let t = timer.elapsed;
-    let pct = 1.0 + (dbg.difficulty_pct as f32 / 100.0);
-    wave.hp_multiplier = cfg.hp_at(t) * pct;
-    wave.damage_multiplier = cfg.dmg_at(t) * pct;
-    wave.base_spawn_rate = cfg.spawn_at(t);
+    // Disabled — using base piecewise curves from enemy plugin
 }
 
 // === Restart (key 8) ===

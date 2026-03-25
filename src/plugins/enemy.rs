@@ -124,9 +124,12 @@ fn current_weak_type(elapsed: f32) -> ArmorType {
 }
 
 /// Compute enemy HP based on armor type and elapsed time.
+/// HP is a staircase — flat within each 30s window, jumps at boundaries.
 /// The current weak type gets 50% HP; all others get full base HP.
 fn compute_enemy_hp(armor_type: ArmorType, elapsed: f32) -> f32 {
-    let base = lerp_curve(&BASE_HP_CURVE, elapsed);
+    // Snap to the start of the current 30s window
+    let window_start = (elapsed / 30.0).floor() * 30.0;
+    let base = lerp_curve(&BASE_HP_CURVE, window_start);
     if armor_type == current_weak_type(elapsed) {
         base * 0.5
     } else {
